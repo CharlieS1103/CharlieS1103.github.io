@@ -21,7 +21,7 @@ function Projects(){
         {
             name: 'Hide Streaming Controls',
             description: 'A Chrome extension that hides the streaming controls on various streaming platforms.',
-            image: 'https://i.imgur.com/Ev9dXvx.png',
+            image: 'https://i.imgur.com/eCJC7Dl.png',
             link: 'https://github.com/CharlieS1103/hide-streaming-controls',
             statement: "Although this project was not the most complicated to make, it serves a huge practical purpose for me, as I dislike having the streaming controls blind me whenever I move my mouse a bit."
         }
