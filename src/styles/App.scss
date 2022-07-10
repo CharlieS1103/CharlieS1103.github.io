@@ -1,6 +1,5 @@
-@import './Colors.scss';
-.App{
-
+@import "./Colors.scss";
+.App {
   position: relative;
   margin: 0;
   overflow: hidden;
@@ -11,9 +10,13 @@
   font-family: "Montserrat", sans-serif;
   font-size: 62.5%;
 }
-.scrolls{display:flex;}
-@media (max-width : 320px) {
-    .scrolls {display:none;}
+.scrolls {
+  display: flex;
+}
+@media (max-width: 320px) {
+  .scrolls {
+    display: none;
+  }
 }
 .scrolls {
   position: absolute;
@@ -76,17 +79,17 @@
         text-transform: uppercase;
         font-weight: 600;
         color: $main-color-dark;
-        
-        &::after {          
+
+        &::after {
           position: absolute;
           bottom: -3px;
           left: 0;
-          content:'';
+          content: "";
           width: 0;
           height: 3px;
           transition: all 0.2s linear;
         }
-        
+
         &:hover {
           &::after {
             width: 100%;
@@ -127,5 +130,21 @@ section {
     pointer-events: none;
     user-select: none;
   }
+}
+/* Scroll bar stuff */
+::-webkit-scrollbar {
+  width: 12px;
+}
 
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  border: 4px solid #191b24;
+  border-radius: 20px;
+  background: #111218;
+}
+::-webkit-scrollbar-track {
+  background: #191b24;
+  border: none;
 }
