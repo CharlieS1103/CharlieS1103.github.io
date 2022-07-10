@@ -1,7 +1,8 @@
 $main-bg: #060724;
 $main-color: #fff;
 $main-color-dark: #303862;
-
+$secondary-bg: #082852;
+$secondary-color: #626161;
 
 .App{
 
@@ -127,6 +128,50 @@ section {
     border-radius: 0.25em;
     pointer-events: none;
     user-select: none;
+  }
+  .projects{
+      ul{
+        .project{
+          background-color: $secondary-bg;
+          border-radius: 0.25em;
+          padding: 1em;
+          width:75%;
+          .project-image{
+
+            .project-preview{
+              width: 50%;
+              height: 50%;
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
+            }
+          }
+          .project-info{
+            a{
+              text-decoration: none;
+              color: $main-color;
+              font-size: 1.25rem;
+              font-weight: 600;
+              text-transform: uppercase;
+              display: block;
+              padding: 0.5em;
+              border-radius: 0.25em;
+              transition: all 0.2s linear;
+              overflow-wrap: anywhere;
+              &:hover{
+                background-color: $main-color-dark;
+                color: $main-bg;
+              }
+            }
+            p{
+              font-size: 1rem;
+              color: $secondary-color;
+              padding: 0.5em;
+              overflow-wrap: anywhere;
+            }
+          }
+        }
+      }
   }
 
 }
