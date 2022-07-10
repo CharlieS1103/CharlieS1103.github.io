@@ -1,5 +1,5 @@
 import Nav from "./Nav.js";
-import Projects from "./Sections/Projects.js";
+import {Projects, About} from "./Sections/index.js";
 function Content() {
   return (
     <>
@@ -20,7 +20,7 @@ function Content() {
           <h2>Section home</h2>
         </section>
         <section id="about">
-          <h2>Section about</h2>
+          <About></About>
         </section>
         <section id="projects">
           <Projects></Projects>
