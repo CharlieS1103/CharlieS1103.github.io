@@ -1,7 +1,8 @@
 //@ts-check
 
 import "../../styles/Projects.scss";
-import { React, useState } from "react";
+import { useState } from "react";
+import React from "react";
 function Projects() {
   const [count, setCount] = useState(0);
   const projects = [
@@ -54,7 +55,7 @@ function Projects() {
           <a href={projects[count].link} target="_blank" rel="noreferrer">
             {projects[count].name}
           </a>
-          <p>“{projects[count].description}”</p>
+          <p>{projects[count].description}</p>
         </div>
         <div className="project-statement">
           <p>{projects[count].statement}</p>
