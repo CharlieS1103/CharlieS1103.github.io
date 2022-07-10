@@ -1,11 +1,27 @@
+import '../../styles/Projects.scss'
 function Projects(){
-    const spicetifyMarketplace = {
-        name: 'Spicetify Marketplace',
-        description: 'A marketplace for Spicetify users to install and manage themes and extensions using inline-linking',
+
+    const projects = [
+        {
+        name: 'Chaos Chess',
+        description: 'A chess game with a twist. Many different custom gamemodes are available.',
         image: 'https://i.imgur.com/Ev9dXvx.png',
-        link: 'https://github.com/Spicetify/spicetify-marketplace',
-    }
-    const projects = [spicetifyMarketplace]
+        link: 'https://github.com/CharlieS1103/ChaosChess',
+
+        }, 
+        {
+            name: 'Spicetify Marketplace',
+            description: 'A marketplace for Spicetify users to install and manage themes and extensions using inline-linking',
+            image: 'https://i.imgur.com/Ev9dXvx.png',
+            link: 'https://github.com/Spicetify/spicetify-marketplace',
+        },
+        {
+            name: 'Hide Streaming Controls',
+            description: 'A Chrome extension that hides the streaming controls on various streaming platforms.',
+            image: 'https://i.imgur.com/Ev9dXvx.png',
+            link: 'https://github.com/CharlieS1103/hide-streaming-controls',
+        }
+    ]
     return(
         <div className="projects"> 
             <ul className="projects-list">

@@ -1,0 +1,52 @@
+@import './Colors.scss';
+.projects{
+    width: 75%;
+    overflow-x:scroll;
+    overflow-y:hidden;
+    scroll-snap-type: x mandatory;
+    background-color: $secondary-bg;
+          border-radius: 0.25em;
+          padding: 1em;
+ display:inline;
+      ul{
+        .project{
+      
+          display:inline;
+
+          .project-image{
+
+            .project-preview{
+              width: 50%;
+              height: 50%;
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
+            }
+          }
+          .project-info{
+            a{
+              text-decoration: none;
+              color: $main-color;
+              font-size: 1.25rem;
+              font-weight: 600;
+              text-transform: uppercase;
+              display: block;
+              padding: 0.5em;
+              border-radius: 0.25em;
+              transition: all 0.2s linear;
+              overflow-wrap: anywhere;
+              &:hover{
+                background-color: $main-color-dark;
+                color: $main-bg;
+              }
+            }
+            p{
+              font-size: 1rem;
+              color: $secondary-color;
+              padding: 0.5em;
+              overflow-wrap: anywhere;
+            }
+          }
+        }
+      }
+  }
