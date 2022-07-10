@@ -1,13 +1,13 @@
-@import './Colors.scss';
-.projects-container{
-    width: 75%;
-    margin: 0 auto;
-    background-color: $secondary-bg;
-    border-radius:15px;
-    display:flex;
-    // Make the buttons hang on the side of the container
-    .projects-button-container{
-
+@import "./Colors.scss";
+.projects-container {
+  width: 75%;
+  height: 85vh;
+  margin-top: 60px;
+  background-color: $secondary-bg;
+  border-radius: 15px;
+  display: flex;
+  // Make the buttons hang on the side of the container
+  .projects-button-container {
     position: relative;
     justify-self: start;
     display: flex;
@@ -16,85 +16,85 @@
     flex-wrap: nowrap;
     align-content: space-between;
 
-    .project-deincrement{
-        border-bottom-left-radius: 12px;
-        border-top: solid 4px $main-bg;
-    
+    .project-deincrement {
+      border-bottom-left-radius: 12px;
+      border-top: solid 4px $main-bg;
     }
-    .project-increment{
-        border-top-left-radius: 12px;
+    .project-increment {
+      border-top-left-radius: 12px;
     }
-   
-    button{
-        position: relative;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        
-        font-size: 30px;
-        color: $secondary-color;
-        background-color: $main-color-dark;
-        border: none;
-        outline: none;
-        cursor: pointer;
-        z-index: 1;
+
+    button {
+      position: relative;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+
+      font-size: 30px;
+      color: $secondary-color;
+      background-color: $main-color-dark;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      z-index: 1;
     }
-}
-        .project{
-
-          .project-image{
-
-            .project-preview{
-              width: 60%;
-              height: 60%;
-              background-size: cover;
-              background-position: center;
-              background-repeat: no-repeat;
-            }
-          }
-          .project-info{
-            a{
-              text-decoration: none;
-              color: $main-color;
-              font-size: 1.25rem;
-              font-weight: 600;
-              text-transform: uppercase;
-              display: block;
-              padding: 0.5em;
-              border-radius: 0.25em;
-              transition: all 0.2s linear;
-              overflow-wrap: anywhere;
-              &:hover{
-                background-color: $main-color-dark;
-                color: $main-bg;
-              }
-            }
-            p{
-              font-size: 1rem;
-              color: $secondary-color;
-              padding: 0.5em;
-              overflow-wrap: anywhere;
-            }
-          }
-       .project-statement{
-        // Make project go to the right side of the container
-        position: relative;
-        justify-self: end;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-        flex-wrap: nowrap;
-        align-content: space-between;
-        p{
-            font-size: 1rem;
-            color: $secondary-color;
-            padding: 0.5em;
-            overflow-wrap: anywhere;
-            
-
-        }
-        
-       }
-        }
   }
+  .project {
+    padding: 0.5em;
+    overflow-y: auto;
+    clear: both;
+    .project-image {
+      display: flex;
+      justify-content: center;
+      .project-preview {
+        width: 60%;
+        height: 60%;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
+    }
+    .project-info {
+      a {
+        text-decoration: none;
+        color: $main-color;
+        font-size: 1.25rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        display: block;
+        border-radius: 0.25em;
+        transition: all 0.2s linear;
+        overflow-wrap: anywhere;
+        text-align: center;
+        &:hover {
+          background-color: $main-color-dark;
+          color: $main-bg;
+        }
+      }
+      p {
+        font-family: "Montserrat", sans-serif;
+        text-align: center;
+        font-style: italic;
+        font-size: 0.875rem;
+        color: $secondary-color;
+        overflow-wrap: anywhere;
+      }
+    }
+    .project-statement {
+      // Make project go to the right side of the container
+      position: relative;
+      justify-self: end;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      flex-wrap: nowrap;
+      align-content: space-between;
+      p {
+        font-size: 1rem;
+        color: $secondary-color;
+        overflow-wrap: anywhere;
+      }
+    }
+  }
+}
