@@ -90,10 +90,6 @@
         transition: all 0.2s linear;
         overflow-wrap: anywhere;
         text-align: center;
-        &:hover {
-          background-color: $main-color-dark;
-          color: $main-bg;
-        }
       }
       p {
         text-align: center;
