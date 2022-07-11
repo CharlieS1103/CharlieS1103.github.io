@@ -1,5 +1,8 @@
+//@ts-check
+
+import React from "react";
 import Nav from "./Nav.js";
-import {Projects, About} from "./Sections/index.js";
+import { Projects, About } from "./Sections/index.js";
 function Content() {
   return (
     <>

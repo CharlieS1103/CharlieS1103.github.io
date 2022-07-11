@@ -1,47 +1,47 @@
 @import "./Colors.scss";
-.about{
-
-    background-color: $main-bg;
-    border-radius: 5px;
-    position:relative;
-    top: -100px;
-    margin-bottom: 20px;
-    color: $main-color;
-
-    h1{
-        font-size: 1.5em;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    p{
-        font-size: 1.25em;
-        line-height: 1.5em;
-        margin-bottom: 10px;
-    }
-.about-content{
-    width:75%;
-    .about-content-text{
-    display: flex;
-    flex-wrap: wrap;
-    align-content: center;
-    justify-content: center;
-    align-items: center;
-    .about-content-social{
-        display:flex;
-        width:100%;
+.about {
+  background-color: $main-bg;
+  border-radius: 5px;
+  top: -100px;
+  margin-bottom: 20px;
+  color: $main-color;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  h1 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  p {
+    font-size: 1.25em;
+    line-height: 1.5em;
+    margin-bottom: 10px;
+  }
+  .about-content {
+    width: 75%;
+    .about-content-text {
+      display: flex;
+      flex-wrap: wrap;
+      align-content: center;
+      justify-content: center;
+      align-items: center;
+      .about-content-social {
+        display: flex;
+        width: 100%;
         border: solid 2px $secondary-bg;
-        border-radius:20px;
-        justify-content:center;
-    a{
-        img{
+        border-radius: 20px;
+        justify-content: center;
+        a {
+          img {
             width: 100%;
-            margin:10px;
+            margin: 10px;
             height: auto;
 
             border-radius: 15px;
+          }
         }
+      }
     }
-    }
-    }
-}
+  }
 }
