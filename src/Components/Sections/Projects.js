@@ -22,7 +22,7 @@ function Projects() {
       image: "https://i.imgur.com/Ev9dXvx.png",
       link: "https://github.com/Spicetify/spicetify-marketplace",
       statement:
-        "This project was the result of a need for a marketplace within Spicetify. Beforehand, users would have to download themes and/or extensions and manually edit the config file, which is a pain. It serves as a user interface for installation, in addition, it has able to work around the limitations of not being able to interact with the Filesystem, hence the use of inline-linking to serve extensions and themes.",
+        "This project was the result of a need for a marketplace within Spicetify. \nBeforehand, users would have to download themes and/or extensions and manually edit the config file, which is a pain. \nIt serves as a user interface for installation, in addition, it has able to work around the limitations of not being able to interact with the Filesystem, hence the use of inline-linking to serve extensions and themes.",
     },
     {
       name: "Hide Streaming Controls",
@@ -35,7 +35,10 @@ function Projects() {
     },
   ];
   return (
-    <div className="projects-container">
+    <div
+      className="projects-container"
+      style={{ backgroundImage: `url(${projects[count].image})` }}
+    >
       <div className="projects-button-container">
         <button
           className="project-increment"
@@ -55,18 +58,21 @@ function Projects() {
           <a href={projects[count].link} target="_blank" rel="noreferrer">
             {projects[count].name}
           </a>
+
           <p>{projects[count].description}</p>
         </div>
         <div className="project-statement">
-          <p>{projects[count].statement}</p>
+          {projects[count].statement.split("\n").map((line, i) => (
+            <p key={i}>{line}</p>
+          ))}
         </div>
-        <div className="project-image">
+        {/* <div className="project-image">
           <img
             className="project-preview"
             src={projects[count].image}
             alt={projects[count].name}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

@@ -1,9 +1,26 @@
 @import "./Colors.scss";
+@import url("https://fonts.googleapis.com/css2?family=Merriweather:wght@300&display=swap");
+
+@keyframes fadein {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .projects-container {
   width: 75%;
   height: 85vh;
   margin-top: 60px;
-  background-color: $secondary-bg;
+  // Project background thing
+  background-size: cover;
+  background-position: center;
+  background-blend-mode: soft-light;
+  background-color: rgba($color: #000, $alpha: 0.3);
+  animation: fadein 0.5s ease-in;
+  transition: background-image 0.8s ease-in;
   border-radius: 15px;
   display: flex;
   // Make the buttons hang on the side of the container
@@ -41,6 +58,12 @@
     }
   }
   .project {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
     padding: 0.5em;
     overflow-y: auto;
     clear: both;
@@ -57,7 +80,7 @@
     }
     .project-info {
       a {
-        text-decoration: none;
+        text-decoration: underline;
         color: $main-color;
         font-size: 1.25rem;
         font-weight: 600;
@@ -73,16 +96,16 @@
         }
       }
       p {
-        font-family: "Montserrat", sans-serif;
         text-align: center;
         font-style: italic;
         font-size: 0.875rem;
-        color: $secondary-color;
+        color: #d3d3d3;
         overflow-wrap: anywhere;
       }
     }
     .project-statement {
       // Make project go to the right side of the container
+      text-align: center;
       position: relative;
       justify-self: end;
       display: flex;
@@ -91,8 +114,11 @@
       flex-wrap: nowrap;
       align-content: space-between;
       p {
-        font-size: 1rem;
-        color: $secondary-color;
+        margin: 0.5rem;
+        font-family: "Merriweather", serif;
+        font-weight: 300;
+        // Light gray font color
+        color: #fefefe;
         overflow-wrap: anywhere;
         line-height: 2;
       }
