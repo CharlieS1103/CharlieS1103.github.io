@@ -2,7 +2,7 @@
 
 import React from "react";
 import Nav from "./Nav.js";
-import { Projects, About } from "./Sections/index.js";
+import { Projects, About, Home } from "./Sections/index.js";
 function Content() {
   return (
     <>
@@ -20,7 +20,7 @@ function Content() {
       <div className="smooth">
         <Nav></Nav>
         <section id="home">
-          <h2>Section home</h2>
+          <Home></Home>
         </section>
         <section id="about">
           <About></About>
