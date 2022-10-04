@@ -21,12 +21,6 @@ function About() {
             Supabase. I am always looking to learn new things and find new tools
             in order to improve my skills and overall proficency.
           </p>
-          <p>
-            I enjoy working with people, dogs, chess, and music. I also am
-            trying to get more into rock climbing. My favorite meal of the day
-            is undoubetely dinner, and on occasion I enjoy cooking. I also enjoy
-            reading and listening to music.
-          </p>
           {/*Add my social links here*/}
           <div className="about-content-social">
             <a
