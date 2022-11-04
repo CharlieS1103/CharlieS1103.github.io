@@ -9,7 +9,7 @@ function About() {
         <div className="about-content-text">
           <h1>About</h1>
           <p>
-            I am 16 years old and currently working on developing my skills and
+            I am 17 years old and currently working on developing my skills and
             finding out what I enjoy. I often make things that I find useful for
             myself or others. I also develop things that I find fun, such as my
             Chess website.
@@ -17,7 +17,7 @@ function About() {
           <p>
             My web development skills are based on HTML, CSS, Typescript,
             JavaScript, React, and Node.js. I also have experience with Python
-            and Java. In terms of databases, I have used MongoDB, Firebase, and
+            and Java and am attempting to learn rust. In terms of databases, I have used MongoDB, Firebase, and
             Supabase. I am always looking to learn new things and find new tools
             in order to improve my skills and overall proficency.
           </p>
