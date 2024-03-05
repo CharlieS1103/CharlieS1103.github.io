@@ -9,7 +9,7 @@ function About() {
         <div className="about-content-text">
           <h1>About</h1>
           <p>
-            I am 17 years old and currently working on developing my skills and
+            I am 18 years old and currently working on developing my skills and
             finding out what I enjoy. I often make things that I find useful for
             myself or others. I also develop things that I find fun, such as my
             Chess website.
