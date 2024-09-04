@@ -29,7 +29,7 @@ function Content() {
           <Projects></Projects>
         </section>
         <section id="contact">
-          <h2>Section contact</h2>
+          <h2>charliejsimons@gmail.com<br></br> OR <br></br> csimons4@uvm.edu</h2>
         </section>
       </div>
     </>
