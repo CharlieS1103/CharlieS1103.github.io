@@ -7,19 +7,15 @@ function About() {
     <div className="about">
       <div className="about-content">
         <div className="about-content-text">
-          <h1>About</h1>
+          <h1>About: </h1>
           <p>
-            I am 18 years old and currently working on developing my skills and
-            finding out what I enjoy. I often make things that I find useful for
-            myself or others. I also develop things that I find fun, such as my
-            Chess website.
+              Enjoyer of outdoors, skiing, climbing, and working out.
           </p>
           <p>
             My web development skills are based on HTML, CSS, Typescript,
             JavaScript, React, and Node.js. I also have experience with Python
-            and Java and am attempting to learn rust. In terms of databases, I have used MongoDB, Firebase, and
-            Supabase. I am always looking to learn new things and find new tools
-            in order to improve my skills and overall proficency.
+            and Java and have worked on a few projects in rust. I have used MongoDB, Firebase, and
+            Supabase.
           </p>
           {/*Add my social links here*/}
           <div className="about-content-social">
