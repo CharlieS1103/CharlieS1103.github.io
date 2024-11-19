@@ -8,8 +8,9 @@ function About() {
       <div className="about-content">
         <div className="about-content-text">
           <h1>About: </h1>
+
           <p>
-              Enjoyer of outdoors, skiing, climbing, and working out.
+              Student at University of Vermont, enjoyer of outdoors, skiing, climbing, and working out.
           </p>
           <p>
             My web development skills are based on HTML, CSS, Typescript,

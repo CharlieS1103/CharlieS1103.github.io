@@ -1,4 +1,5 @@
 @import "./Colors.scss";
+
 .App {
   position: relative;
   margin: 0;
@@ -10,14 +11,17 @@
   font-family: "Montserrat", sans-serif;
   font-size: 62.5%;
 }
+
 .scrolls {
   display: flex;
 }
+
 @media (max-width: 450px) {
   .scrolls {
     display: none;
   }
 }
+
 .scrolls {
   position: absolute;
   top: 50%;
@@ -42,12 +46,12 @@
   height: 100%;
   scroll-behavior: smooth;
   overflow-y: scroll;
-
   scroll-snap-type: mandatory;
   scroll-snap-points-y: repeat(100vh);
   scroll-snap-type: y mandatory;
   // scroll-padding: 5vh 0;
 }
+
 .navigation {
   position: fixed;
   top: 0;
@@ -58,9 +62,9 @@
   font-size: 1rem;
   color: $main-color;
   border-bottom: 3px solid $main-color-dark;
-  width: 100%;
-  background-color: rgb(6, 7, 36, 0.9);
+  background-color: rgba(6, 7, 36, 0.9);
   mix-blend-mode: luminosity;
+
   ul {
     margin: 0;
     padding: 0;
@@ -99,7 +103,19 @@
       }
     }
   }
+
+  @media (max-width: 768px) {
+    ul {
+      flex-direction: column;
+      align-items: center;
+
+      li {
+        margin: 0.5em 0;
+      }
+    }
+  }
 }
+
 section {
   position: relative;
   display: flex;
@@ -111,7 +127,6 @@ section {
   font-size: 1rem;
   background-color: $main-bg;
   background-size: cover;
-
   scroll-snap-align: center;
   border-bottom: 3px solid $main-color-dark;
 
@@ -119,19 +134,23 @@ section {
     text-transform: uppercase;
     font-size: 2.25rem;
     font-weight: 900;
-
     padding: 0.5em 1em;
-
     color: $main-color;
     background-color: $main-bg;
     mix-blend-mode: screen;
-
     border-radius: 0.25em;
     pointer-events: none;
     -webkit-user-select: none;
     user-select: none;
   }
+
+  @media (max-width: 768px) {
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
 }
+
 /* Scroll bar stuff */
 ::-webkit-scrollbar {
   width: 12px;
@@ -140,12 +159,28 @@ section {
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   border: 4px solid #191b24;
   border-radius: 20px;
   background: #111218;
 }
+
 ::-webkit-scrollbar-track {
   background: #191b24;
   border: none;
+}
+
+@media (max-width: 768px) {
+  .App {
+    font-size: 50%;
+  }
+
+  .scrolls {
+    font-size: 1.5rem;
+  }
+
+  .smooth {
+    scroll-snap-points-y: repeat(50vh);
+  }
 }

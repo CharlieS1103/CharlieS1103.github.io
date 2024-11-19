@@ -1,0 +1,19 @@
+.contact {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+  
+    h2 {
+      font-size: 1.5rem;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+    }
+  
+    @media (max-width: 768px) {
+      h2 {
+        font-size: 1.2rem;
+      }
+    }
+  }

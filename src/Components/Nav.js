@@ -1,7 +1,19 @@
+import React, { useState } from 'react';
+import "../styles/Nav.scss";
+
 function Nav() {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div className="navigation">
-      <ul>
+      <button className="menu-toggle" onClick={toggleMenu}>
+        ☰
+      </button>
+      <ul className={isOpen ? 'open' : ''}>
         <li>
           <a href="#home">home</a>
         </li>
@@ -18,4 +30,5 @@ function Nav() {
     </div>
   );
 }
+
 export default Nav;

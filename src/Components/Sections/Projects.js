@@ -1,5 +1,3 @@
-//@ts-check
-
 import "../../styles/Projects.scss";
 import { useEffect, useState } from "react";
 import React from "react";
@@ -33,19 +31,34 @@ const projects = [
       "Although this project was not the most complicated to make, it serves a huge practical purpose for me, as I dislike having the streaming controls blind me whenever I move my mouse.",
   },
 ];
+
 function Projects() {
   const [count, setCount] = useState(0);
-  // When page is rendered (componentMount), load in the images
+
   useEffect(() => {
     projects.forEach((project) => {
       new Image().src = project.image;
     });
   }, []);
+
   return (
     <div
       className="projects-container"
       style={{ backgroundImage: `url(${projects[count].image})` }}
     >
+      <div className="project">
+        <div className="project-info">
+          <a href={projects[count].link} target="_blank" rel="noreferrer">
+            {projects[count].name}
+          </a>
+          <p>{projects[count].description}</p>
+        </div>
+        <div className="project-statement">
+          {projects[count].statement.split("\n").map((line, i) => (
+            <p key={i}>{line}</p>
+          ))}
+        </div>
+      </div>
       <div className="projects-button-container">
         <button
           className="project-increment"
@@ -60,49 +73,24 @@ function Projects() {
           -
         </button>
       </div>
-      <div className="project">
-        <div className="project-info">
-          <a href={projects[count].link} target="_blank" rel="noreferrer">
-            {projects[count].name}
-          </a>
-
-          <p>{projects[count].description}</p>
-        </div>
-        <div className="project-statement">
-          {projects[count].statement.split("\n").map((line, i) => (
-            <p key={i}>{line}</p>
-          ))}
-        </div>
-        {/* <div className="project-image">
-          <img
-            className="project-preview"
-            src={projects[count].image}
-            alt={projects[count].name}
-          />
-        </div> */}
-      </div>
     </div>
   );
 }
 
-
 function increment(projects, setCount, count) {
-  // Set the count as long as it is less than the length of the projects array
-
   if (count < projects.length - 1) {
     setCount(count + 1);
-  } // Back to position 0 if the count is equal to the length of the projects array
-  else if (count === projects.length - 1) {
+  } else if (count === projects.length - 1) {
     setCount(0);
   }
 }
+
 function deincrement(projects, setCount, count) {
-  // Set the count as long as it is greater than 0
   if (count > 0) {
     setCount(count - 1);
-  } // Back to the last position if the count is 0
-  else if (count === 0) {
+  } else if (count === 0) {
     setCount(projects.length - 1);
   }
 }
+
 export default Projects;

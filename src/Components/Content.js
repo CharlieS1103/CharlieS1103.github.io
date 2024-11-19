@@ -2,7 +2,7 @@
 
 import React from "react";
 import Nav from "./Nav.js";
-import { Projects, About, Home } from "./Sections/index.js";
+import { Projects, About, Home, Contact } from "./Sections/index.js";
 function Content() {
   return (
     <>
@@ -29,7 +29,7 @@ function Content() {
           <Projects></Projects>
         </section>
         <section id="contact">
-          <h2>charliejsimons@gmail.com<br></br> OR <br></br> csimons4@uvm.edu</h2>
+         <Contact></Contact>
         </section>
       </div>
     </>

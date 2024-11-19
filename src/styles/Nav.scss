@@ -1,0 +1,83 @@
+@import "./Colors.scss";
+.navigation {
+    position: fixed;
+    top: 0;
+    z-index: 1;
+    display: flex;
+    width: 100%;
+    min-height: 60px;
+    font-size: 1rem;
+    color: $main-color;
+    border-bottom: 3px solid $main-color-dark;
+    background-color: rgba(6, 7, 36, 0.9);
+    mix-blend-mode: luminosity;
+  
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: $main-color;
+      cursor: pointer;
+    }
+  
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+  
+      li {
+        margin: 0 1em;
+        padding: 1em;
+  
+        a {
+          position: relative;
+          text-decoration: none;
+          text-transform: uppercase;
+          font-weight: 600;
+          color: $main-color-dark;
+          transition: all 0.5s linear;
+          &::after {
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            content: "";
+            width: 0;
+            height: 3px;
+            transition: all 0.5s linear;
+          }
+  
+          &:hover {
+            &::after {
+              width: 100%;
+              background-color: $main-color-dark;
+            }
+          }
+        }
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+  
+      ul {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+  
+        &.open {
+          display: flex;
+        }
+  
+        li {
+          margin: 0.5em 0;
+        }
+      }
+    }
+  }
