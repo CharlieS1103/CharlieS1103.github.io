@@ -15,11 +15,18 @@ function Nav() {
         ☰
       </button>
       <ul className={isOpen ? 'open' : ''}>
-        <li><Link to="#home">Home</Link></li>
-        <li><Link to="#about">About</Link></li>
-        <li><Link to="#projects">Projects</Link></li>
-        <li><Link to="#contact">Contact</Link></li>
-        <li><Link to="#/roommate-quiz">Roommate Quiz</Link></li>
+      <li>
+          <a href="#home">home</a>
+        </li>
+        <li>
+          <a href="#about">about</a>
+        </li>
+        <li>
+          <a href="#projects">projects</a>
+        </li>
+        <li>
+          <a href="#contact">contact</a>
+        </li>
       </ul>
     </div>
   );
