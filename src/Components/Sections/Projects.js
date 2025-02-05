@@ -10,7 +10,7 @@ const projects = [
     image: "https://i.imgur.com/Sq17jFd.png",
     link: "https://github.com/CharlieS1103/ChaosChess",
     statement:
-      "I made this project as a way to learn how to integrate a full website with both a backend and a frontend. It was also inspired by my interest in chess, and served as a playground for my own original gamemodes. It obviously has no practical use, and the UI has a lot of room to grow, but it was a fun project to make.",
+      "I made this project as a way to learn how to integrate a full website with both a backend and a frontend. It was also inspired by my interest in chess, and served as a playground for my own original gamemodes. The UI has a lot of room to grow, but it was a fun project to make.",
   },
   {
     name: "Spicetify Marketplace",
@@ -28,7 +28,7 @@ const projects = [
     image: "https://i.imgur.com/eCJC7Dl.png",
     link: "https://github.com/CharlieS1103/hide-streaming-controls",
     statement:
-      "Although this project was not the most complicated to make, it serves a huge practical purpose for me, as I dislike having the streaming controls blind me whenever I move my mouse.",
+    ""
   },
 ];
 
