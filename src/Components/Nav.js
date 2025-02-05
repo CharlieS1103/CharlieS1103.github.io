@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import "../styles/Nav.scss";
+import { Link } from "react-router-dom";
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,18 +15,11 @@ function Nav() {
         ☰
       </button>
       <ul className={isOpen ? 'open' : ''}>
-        <li>
-          <a href="#home">home</a>
-        </li>
-        <li>
-          <a href="#about">about</a>
-        </li>
-        <li>
-          <a href="#projects">projects</a>
-        </li>
-        <li>
-          <a href="#contact">contact</a>
-        </li>
+        <li><Link to="#home">Home</Link></li>
+        <li><Link to="#about">About</Link></li>
+        <li><Link to="#projects">Projects</Link></li>
+        <li><Link to="#contact">Contact</Link></li>
+        <li><Link to="#/roommate-quiz">Roommate Quiz</Link></li>
       </ul>
     </div>
   );

@@ -1,10 +1,9 @@
-// filepath: /Users/charliesimons/Documents/GitHub/spicetify/CharlieS1103.github.io/src/Components/Content.js
 //@ts-check
 
 import React from "react";
 import Nav from "./Nav.js";
 import { Projects, About, Home, Contact, RoommateQuiz } from "./Sections/index.js";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom";
 
 function Content() {
   return (
