@@ -64,7 +64,7 @@ function useAiPoems() {
   const [aiPoems, setAiPoems] = useState([]);
 
   useEffect(() => {
-    fetch("https://raw.githubusercontent.com/CharlieS1103/CharlieS1103.github.io/main/public/ai-poems.json")
+    fetch("https://charlies1103.github.io/ai-poems.json")
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data) && data.length > 0) setAiPoems(data);
