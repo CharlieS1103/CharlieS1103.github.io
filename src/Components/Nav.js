@@ -27,6 +27,9 @@ function Nav() {
         <li>
           <a href="#contact">contact</a>
         </li>
+        <li>
+          <a href="#poem">poem</a>
+        </li>
       </ul>
     </div>
   );
