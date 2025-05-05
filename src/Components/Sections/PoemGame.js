@@ -1,6 +1,12 @@
 import "../../styles/PoemGame.scss";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
+import { createClient } from '@supabase/supabase-js';
+
+// NEW: Initialize the Supabase client using environment variables
+const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 function cleanPoemText(text) {
   // Remove "Feedback links", "Feedback:", and everything after, including URLs, "Comments:", and critique notes
@@ -77,9 +83,9 @@ function useRedditPoems() {
 
     // Try to get poems from top, new, and hot, then shuffle and deduplicate
     Promise.all([
-      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/top.json?limit=50"),
-      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/new.json?limit=50"),
-      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/hot.json?limit=50")
+
+      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/new.json?limit=100"),
+      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/hot.json?limit=100")
     ])
       .then(results => {
         // Flatten, deduplicate by text, and shuffle
@@ -105,119 +111,119 @@ function useRedditPoems() {
   return poems;
 }
 
-function useAiPoems() {
-  const [aiPoems, setAiPoems] = useState([]);
+// NEW: Updated generateMimicPoem to use REACT_APP_OPENAI_API_KEY and insert into Supabase
+async function generateMimicPoem(humanText) {
+  const prompt = `Mimic the following poem's length, theme (if the poem is about betrayal, make yours about betrayal, etc.), and quirks—including any errors or extra messages. Deviate from the plot to produce a completely unique poem that still bears a vague association with the original. Generate a similar poem:\n
+  
+${humanText}
 
-  useEffect(() => {
-    fetch("https://charlies1103.github.io/ai-poems.json")
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data) && data.length > 0) setAiPoems(data);
-      });
-  }, []);
-
-  return aiPoems;
+Your answer should blend in every nuance.`;
+  try {
+    const res = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4.1-mini",
+        messages: [{ role: "user", content: prompt }],
+        temperature: 0.7
+      })
+    });
+    const data = await res.json();
+    if (data.choices && data.choices.length > 0) {
+      const mimicText = data.choices[0].message.content.trim();
+      const { error } = await supabase
+        .from("ai_poems")
+        .insert([
+          {
+            text: mimicText,
+            created_at: new Date().toISOString()
+          }
+        ]);
+      if (error) {
+        console.error("Error inserting AI poem into Supabase:", error);
+        // print the error to the console
+        console.error("Error details:", error.details);
+      }
+      return mimicText;
+    } else {
+      return "No mimic output generated.";
+    }
+  } catch (err) {
+    console.error(err);
+    return `Error: ${err.message}`;
+  }
 }
 
-// Combine and shuffle poems for the game
-function getShuffledPoemPair(humanPoems, aiPoems) {
-  // Only return a pair if both arrays have at least one poem
-  if (!Array.isArray(humanPoems) || !Array.isArray(aiPoems) || humanPoems.length === 0 || aiPoems.length === 0) {
-    return [];
-  }
-
-  // Helper to get a random poem of similar length (line count)
-  function getSimilarLengthPoem(targetPoem, candidates, usedIndexes = new Set()) {
-    const targetLines = targetPoem.text.split('\n').filter(Boolean).length;
-    // Filter out poems that are too short (e.g. < 6 lines)
-    const filtered = candidates
-      .map((poem, idx) => ({ poem, idx }))
-      .filter(({ poem, idx }) =>
-        poem.text.split('\n').filter(Boolean).length >= Math.max(6, targetLines - 2) &&
-        poem.text.split('\n').filter(Boolean).length <= targetLines + 2 &&
-        !usedIndexes.has(idx)
-      );
-    if (filtered.length === 0) {
-      // fallback: pick any poem with at least 6 lines and not used
-      const fallback = candidates
-        .map((poem, idx) => ({ poem, idx }))
-        .filter(({ poem, idx }) => poem.text.split('\n').filter(Boolean).length >= 6 && !usedIndexes.has(idx));
-      if (fallback.length === 0) return null;
-      const pick = fallback[Math.floor(Math.random() * fallback.length)];
-      usedIndexes.add(pick.idx);
-      return pick.poem;
-    }
-    const pick = filtered[Math.floor(Math.random() * filtered.length)];
-    usedIndexes.add(pick.idx);
-    return pick.poem;
-  }
-
-  // Track used indexes to avoid repeats in a session
-  if (!getShuffledPoemPair.usedHuman) getShuffledPoemPair.usedHuman = new Set();
-  if (!getShuffledPoemPair.usedAI) getShuffledPoemPair.usedAI = new Set();
-
-  // Pick a random human poem (prefer longer ones)
-  const humanCandidates = humanPoems
-    .map((poem, idx) => ({ poem, idx }))
-    .filter(({ poem, idx }) => poem.text.split('\n').filter(Boolean).length >= 6 && !getShuffledPoemPair.usedHuman.has(idx));
-  let humanPick;
-  if (humanCandidates.length > 0) {
-    const pick = humanCandidates[Math.floor(Math.random() * humanCandidates.length)];
-    humanPick = pick.poem;
-    getShuffledPoemPair.usedHuman.add(pick.idx);
-  } else {
-    // fallback: allow repeats if all have been used
-    getShuffledPoemPair.usedHuman.clear();
-    const pick = humanPoems[Math.floor(Math.random() * humanPoems.length)];
-    humanPick = pick;
-  }
-
-  // Pick an AI poem of similar length (avoid repeats)
-  const aiPick = getSimilarLengthPoem(humanPick, aiPoems, getShuffledPoemPair.usedAI) || aiPoems[Math.floor(Math.random() * aiPoems.length)];
-
-  // Mark as used
-  const aiIdx = aiPoems.indexOf(aiPick);
-  if (aiIdx !== -1) getShuffledPoemPair.usedAI.add(aiIdx);
-
-  // Randomize order
-  const pair = Math.random() > 0.5 ? [humanPick, aiPick] : [aiPick, humanPick];
-  return pair;
+async function getShuffledPoemPair(humanPoems) {
+  if (!Array.isArray(humanPoems) || humanPoems.length === 0) return [];
+  // Pick a random human poem that meets our length criteria (at least 6 non-empty lines)
+  const candidates = humanPoems.filter(poem => poem.text.split('\n').filter(Boolean).length >= 6);
+  const humanPick = candidates[Math.floor(Math.random() * candidates.length)];
+  // Generate the mimic poem via ChatGPT and cache it in Supabase from generateMimicPoem
+  const mimicText = await generateMimicPoem(humanPick.text);
+  // Randomize order: either [human, mimic] or vice versa
+  return Math.random() > 0.5
+    ? [humanPick, { title: "Mimic Poem", author: "AI (ChatGPT Mimic)", text: mimicText }]
+    : [{ title: "Mimic Poem", author: "AI (ChatGPT Mimic)", text: mimicText }, humanPick];
 }
 
 function PoemGame() {
   const humanPoems = useRedditPoems();
-  const aiPoems = useAiPoems();
-  const [poemPair, setPoemPair] = useState(() => getShuffledPoemPair(humanPoems, aiPoems));
+  // ...existing state declarations...
+  const [poemPair, setPoemPair] = useState([]);
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
 
-  // Scroll to top when next round or new poems loaded
+  // Helper function to scroll to the top of the page
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   useEffect(() => {
-    setPoemPair(getShuffledPoemPair(humanPoems, aiPoems));
-    setSelected(null);
-    setResult(null);
-    scrollToTop();
+    async function loadPair() {
+      if (humanPoems.length > 0) {
+        const pair = await getShuffledPoemPair(humanPoems);
+        setPoemPair(pair);
+        setSelected(null);
+        setResult(null);
+        scrollToTop();
+      }
+    }
+    loadPair();
     // eslint-disable-next-line
-  }, [humanPoems, aiPoems]);
+  }, [humanPoems]);
 
   function nextRound() {
-    setPoemPair(getShuffledPoemPair(humanPoems, aiPoems));
-    setSelected(null);
-    setResult(null);
-    scrollToTop();
+    async function loadNext() {
+      const pair = await getShuffledPoemPair(humanPoems);
+      setPoemPair(pair);
+      setSelected(null);
+      setResult(null);
+      scrollToTop();
+    }
+    loadNext();
   }
 
   function handleGuess(index) {
     setSelected(index);
-    if (poemPair[index].author !== "AI") {
+    if (poemPair[index].author !== "AI (ChatGPT Mimic)") {
       setResult("Correct! You found the human poem.");
     } else {
-      setResult("Wrong! That was the AI poem.");
+      setResult("Wrong! That was the AI (mimic) poem.");
     }
+  }
+
+  if (humanPoems.length === 0 || poemPair.length !== 2) {
+    return (
+      <div className="projects-container" style={{ minHeight: "60vh", position: "relative", color: "#fff" }}>
+        <div className="project">
+          <p>Loading poems...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -226,33 +232,27 @@ function PoemGame() {
         <h2>Poem vs AI Generated Poem</h2>
         <p>Can you guess which poem is written by a human?</p>
         <div className="poem-game">
-          {poemPair.length === 2 ? (
-            poemPair.map((poem, idx) => (
-              <div
-                key={idx}
-                className={`poem-option${selected === idx ? " selected" : ""}`}
-                style={{
-                  border: "2px solid #fff",
-                  borderRadius: "10px",
-                  margin: "1em",
-                  padding: "1em",
-                  background: selected === idx ? "#3ea8ef33" : "rgba(0,0,0,0.4)",
-                  cursor: selected === null ? "pointer" : "default",
-                  opacity: selected !== null && selected !== idx ? 0.6 : 1
-                }}
-                onClick={() => selected === null && handleGuess(idx)}
-              >
-                <h3>Poem {idx + 1}</h3>
-                <pre style={{ whiteSpace: "pre-wrap", textAlign: "left", fontFamily: "Merriweather, serif" }}>
-                  {poem?.text || ""}
-                </pre>
-              </div>
-            ))
-          ) : (
-            <div style={{ margin: "2em", color: "#fff" }}>
-              Loading poems...
+          {poemPair.map((poem, idx) => (
+            <div
+              key={idx}
+              className={`poem-option${selected === idx ? " selected" : ""}`}
+              style={{
+                border: "2px solid #fff",
+                borderRadius: "10px",
+                margin: "1em",
+                padding: "1em",
+                background: selected === idx ? "#3ea8ef33" : "rgba(0,0,0,0.4)",
+                cursor: selected === null ? "pointer" : "default",
+                opacity: selected !== null && selected !== idx ? 0.6 : 1
+              }}
+              onClick={() => selected === null && handleGuess(idx)}
+            >
+              <h3>Poem {idx + 1}</h3>
+              <pre style={{ whiteSpace: "pre-wrap", textAlign: "left", fontFamily: "Merriweather, serif" }}>
+                {poem?.text || ""}
+              </pre>
             </div>
-          )}
+          ))}
         </div>
         {result && (
           <div style={{
@@ -273,11 +273,7 @@ function PoemGame() {
             <button
               onClick={nextRound}
               className="poemgame-next-btn"
-              style={{
-                marginTop: "0.5em",
-                position: "relative",
-                zIndex: 1001
-              }}
+              style={{ marginTop: "0.5em", position: "relative", zIndex: 1001 }}
             >
               Next Round
             </button>
