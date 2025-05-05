@@ -1,21 +1,21 @@
-import "../../styles/About.scss";
-import { useEffect, useState } from "react";
+import "../../styles/PoemGame.scss";
+import { useEffect, useState, useRef } from "react";
 import React from "react";
 
 function cleanPoemText(text) {
-  // Remove "Feedback links" and everything after, including URLs and "Comments:"
+  // Remove "Feedback links" and everything after, including URLs, "Comments:", and critique notes
   let cleaned = text.trim();
   const lower = cleaned.toLowerCase();
   const feedbackIdx = lower.indexOf("feedback links");
   const commentsIdx = lower.indexOf("comments:");
+  const critiqueIdx = lower.indexOf("note, do not be afraid to critique");
   let cutIdx = -1;
-  if (feedbackIdx !== -1 && commentsIdx !== -1) {
-    cutIdx = Math.min(feedbackIdx, commentsIdx);
-  } else if (feedbackIdx !== -1) {
-    cutIdx = feedbackIdx;
-  } else if (commentsIdx !== -1) {
-    cutIdx = commentsIdx;
-  }
+  // Find the earliest of the markers
+  [feedbackIdx, commentsIdx, critiqueIdx]
+    .filter(idx => idx !== -1)
+    .forEach(idx => {
+      if (cutIdx === -1 || idx < cutIdx) cutIdx = idx;
+    });
   if (cutIdx !== -1) cleaned = cleaned.slice(0, cutIdx).trim();
 
   // Remove lines that are just URLs or contain reddit.com links
@@ -28,8 +28,26 @@ function cleanPoemText(text) {
     )
     .join('\n')
     .trim();
+
   // Remove any trailing "[]()" style markdown links
   cleaned = cleaned.replace(/\[.*?\]\(.*?\)$/gm, '').trim();
+
+  // Remove markdown formatting: headings, bold, italics, blockquotes, etc.
+  cleaned = cleaned
+    .replace(/^#+\s*/gm, '') // Remove markdown headings
+    .replace(/[*_]{1,3}([^*_]+)[*_]{1,3}/g, '$1') // Remove bold/italic
+    .replace(/^\s*>+\s?/gm, '') // Remove blockquotes
+    .replace(/\*\*/g, '') // Remove any remaining **
+    .replace(/__+/g, '') // Remove any remaining __
+    .replace(/^\s*[-*]\s+/gm, '') // Remove unordered list markers
+    .replace(/^\s*\d+\.\s+/gm, '') // Remove ordered list markers
+    .replace(/&nbsp;/gi, ' ') // Remove HTML non-breaking spaces
+    .replace(/ {2,}/g, ' ') // Collapse multiple spaces into one
+    .replace(/\\$/gm, '') // Remove trailing backslashes used for line breaks
+    .replace(/&[a-zA-Z]+;/g, '') // Remove any remaining HTML entities like &a, &nbs;
+    .replace(/^\s+|\s+$/gm, '') // Trim leading/trailing spaces per line
+    .trim();
+
   return cleaned;
 }
 
@@ -37,20 +55,42 @@ function useRedditPoems() {
   const [poems, setPoems] = useState([]);
 
   useEffect(() => {
-    fetch("https://www.reddit.com/r/OCPoetry/top.json?limit=50")
-      .then(res => res.json())
-      .then(data => {
-        if (!data || !data.data || !Array.isArray(data.data.children)) return;
-        const posts = data.data.children;
-        const poems = posts
-          .filter(post => post.data && post.data.selftext && post.data.selftext.length > 40)
-          .map(post => ({
-            title: post.data.title || "Untitled",
-            author: post.data.author || "Reddit User",
-            text: cleanPoemText(post.data.selftext)
-          }))
-          .filter(poem => poem.text.split("\n").length >= 3 && poem.text.length > 40); // basic filter for poem-like
-        if (poems.length > 0) setPoems(poems);
+    // Helper to fetch from a given endpoint and return poems
+    const fetchPoemsFrom = async (endpoint) => {
+      const res = await fetch(endpoint);
+      const data = await res.json();
+      if (!data || !data.data || !Array.isArray(data.data.children)) return [];
+      return data.data.children
+        .filter(post => post.data && post.data.selftext && post.data.selftext.length > 40)
+        .map(post => ({
+          title: post.data.title || "Untitled",
+          author: post.data.author || "Reddit User",
+          text: cleanPoemText(post.data.selftext)
+        }))
+        .filter(poem => poem.text.split("\n").length >= 3 && poem.text.length > 40);
+    };
+
+    // Try to get poems from top, new, and hot, then shuffle and deduplicate
+    Promise.all([
+      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/top.json?limit=50"),
+      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/new.json?limit=50"),
+      fetchPoemsFrom("https://www.reddit.com/r/OCPoetry/hot.json?limit=50")
+    ])
+      .then(results => {
+        // Flatten, deduplicate by text, and shuffle
+        const all = results.flat();
+        const seen = new Set();
+        const deduped = all.filter(poem => {
+          if (seen.has(poem.text)) return false;
+          seen.add(poem.text);
+          return true;
+        });
+        // Shuffle
+        for (let i = deduped.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [deduped[i], deduped[j]] = [deduped[j], deduped[i]];
+        }
+        setPoems(deduped);
       })
       .catch(() => {
         // no fallback
@@ -94,22 +134,26 @@ function PoemGame() {
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
 
-  // Update poem pair when humanPoems or aiPoems changes (after fetch)
+  // Scroll to top when next round or new poems loaded
+  function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
   useEffect(() => {
     setPoemPair(getShuffledPoemPair(humanPoems, aiPoems));
     setSelected(null);
     setResult(null);
+    scrollToTop();
     // eslint-disable-next-line
   }, [humanPoems, aiPoems]);
 
-  // Reset game on next round
   function nextRound() {
     setPoemPair(getShuffledPoemPair(humanPoems, aiPoems));
     setSelected(null);
     setResult(null);
+    scrollToTop();
   }
 
-  // Handle user guess
   function handleGuess(index) {
     setSelected(index);
     if (poemPair[index].author !== "AI") {
@@ -120,7 +164,7 @@ function PoemGame() {
   }
 
   return (
-    <div className="projects-container" style={{ minHeight: "60vh" }}>
+    <div className="projects-container" style={{ minHeight: "60vh", position: "relative" }}>
       <div className="project">
         <h2>Poem vs AI Generated Poem</h2>
         <p>Can you guess which poem is written by a human?</p>
@@ -154,10 +198,30 @@ function PoemGame() {
           )}
         </div>
         {result && (
-          <div style={{ marginTop: "1em", fontWeight: "bold" }}>
+          <div style={{
+            marginTop: "1em",
+            fontWeight: "bold",
+            position: "fixed",
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 1000,
+            background: "rgba(30, 144, 255, 0.97)",
+            color: "#fff",
+            textAlign: "center",
+            padding: "1em 0"
+          }}>
             {result}
             <br />
-            <button onClick={nextRound} style={{ marginTop: "0.5em" }}>
+            <button
+              onClick={nextRound}
+              className="poemgame-next-btn"
+              style={{
+                marginTop: "0.5em",
+                position: "relative",
+                zIndex: 1001
+              }}
+            >
               Next Round
             </button>
           </div>
