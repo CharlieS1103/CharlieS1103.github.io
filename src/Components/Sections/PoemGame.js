@@ -3,15 +3,16 @@ import { useEffect, useState, useRef } from "react";
 import React from "react";
 
 function cleanPoemText(text) {
-  // Remove "Feedback links" and everything after, including URLs, "Comments:", and critique notes
+  // Remove "Feedback links", "Feedback:", and everything after, including URLs, "Comments:", and critique notes
   let cleaned = text.trim();
   const lower = cleaned.toLowerCase();
-  const feedbackIdx = lower.indexOf("feedback links");
+  const feedbackLinksIdx = lower.indexOf("feedback links");
+  const feedbackIdx = lower.indexOf("feedback:");
   const commentsIdx = lower.indexOf("comments:");
   const critiqueIdx = lower.indexOf("note, do not be afraid to critique");
   let cutIdx = -1;
   // Find the earliest of the markers
-  [feedbackIdx, commentsIdx, critiqueIdx]
+  [feedbackLinksIdx, feedbackIdx, commentsIdx, critiqueIdx]
     .filter(idx => idx !== -1)
     .forEach(idx => {
       if (cutIdx === -1 || idx < cutIdx) cutIdx = idx;
@@ -46,6 +47,10 @@ function cleanPoemText(text) {
     .replace(/\\$/gm, '') // Remove trailing backslashes used for line breaks
     .replace(/&[a-zA-Z]+;/g, '') // Remove any remaining HTML entities like &a, &nbs;
     .replace(/^\s+|\s+$/gm, '') // Trim leading/trailing spaces per line
+    // Remove lines above or below a line with 3 or more repeated chars (e.g. ---)
+    .replace(/(^|\n)[^\n]*\n[-_*~]{3,}\n[^\n]*(\n|$)/g, '\n')
+    .replace(/(^|\n)[-_*~]{3,}\n[^\n]*(\n|$)/g, '\n')
+    .replace(/(^|\n)[^\n]*\n[-_*~]{3,}(\n|$)/g, '\n')
     .trim();
 
   return cleaned;
@@ -116,14 +121,66 @@ function useAiPoems() {
 
 // Combine and shuffle poems for the game
 function getShuffledPoemPair(humanPoems, aiPoems) {
-  // Defensive: Only return a pair if both arrays have at least one poem
+  // Only return a pair if both arrays have at least one poem
   if (!Array.isArray(humanPoems) || !Array.isArray(aiPoems) || humanPoems.length === 0 || aiPoems.length === 0) {
     return [];
   }
-  const human = humanPoems[Math.floor(Math.random() * humanPoems.length)];
-  const ai = aiPoems[Math.floor(Math.random() * aiPoems.length)];
+
+  // Helper to get a random poem of similar length (line count)
+  function getSimilarLengthPoem(targetPoem, candidates, usedIndexes = new Set()) {
+    const targetLines = targetPoem.text.split('\n').filter(Boolean).length;
+    // Filter out poems that are too short (e.g. < 6 lines)
+    const filtered = candidates
+      .map((poem, idx) => ({ poem, idx }))
+      .filter(({ poem, idx }) =>
+        poem.text.split('\n').filter(Boolean).length >= Math.max(6, targetLines - 2) &&
+        poem.text.split('\n').filter(Boolean).length <= targetLines + 2 &&
+        !usedIndexes.has(idx)
+      );
+    if (filtered.length === 0) {
+      // fallback: pick any poem with at least 6 lines and not used
+      const fallback = candidates
+        .map((poem, idx) => ({ poem, idx }))
+        .filter(({ poem, idx }) => poem.text.split('\n').filter(Boolean).length >= 6 && !usedIndexes.has(idx));
+      if (fallback.length === 0) return null;
+      const pick = fallback[Math.floor(Math.random() * fallback.length)];
+      usedIndexes.add(pick.idx);
+      return pick.poem;
+    }
+    const pick = filtered[Math.floor(Math.random() * filtered.length)];
+    usedIndexes.add(pick.idx);
+    return pick.poem;
+  }
+
+  // Track used indexes to avoid repeats in a session
+  if (!getShuffledPoemPair.usedHuman) getShuffledPoemPair.usedHuman = new Set();
+  if (!getShuffledPoemPair.usedAI) getShuffledPoemPair.usedAI = new Set();
+
+  // Pick a random human poem (prefer longer ones)
+  const humanCandidates = humanPoems
+    .map((poem, idx) => ({ poem, idx }))
+    .filter(({ poem, idx }) => poem.text.split('\n').filter(Boolean).length >= 6 && !getShuffledPoemPair.usedHuman.has(idx));
+  let humanPick;
+  if (humanCandidates.length > 0) {
+    const pick = humanCandidates[Math.floor(Math.random() * humanCandidates.length)];
+    humanPick = pick.poem;
+    getShuffledPoemPair.usedHuman.add(pick.idx);
+  } else {
+    // fallback: allow repeats if all have been used
+    getShuffledPoemPair.usedHuman.clear();
+    const pick = humanPoems[Math.floor(Math.random() * humanPoems.length)];
+    humanPick = pick;
+  }
+
+  // Pick an AI poem of similar length (avoid repeats)
+  const aiPick = getSimilarLengthPoem(humanPick, aiPoems, getShuffledPoemPair.usedAI) || aiPoems[Math.floor(Math.random() * aiPoems.length)];
+
+  // Mark as used
+  const aiIdx = aiPoems.indexOf(aiPick);
+  if (aiIdx !== -1) getShuffledPoemPair.usedAI.add(aiIdx);
+
   // Randomize order
-  const pair = Math.random() > 0.5 ? [human, ai] : [ai, human];
+  const pair = Math.random() > 0.5 ? [humanPick, aiPick] : [aiPick, humanPick];
   return pair;
 }
 
