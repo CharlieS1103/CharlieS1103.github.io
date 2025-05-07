@@ -1,6 +1,6 @@
 {
   "name": "charlies1103.github.io",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "homepage": "https://charlies1103.github.io",
   "dependencies": {
@@ -8,6 +8,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "jsonwebtoken": "^9.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.0",
@@ -16,12 +17,14 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "populate-db": "node scripts/generateMimicPoems.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "mimic:poems": "node scripts/mimic_poems.js"
   },
   "eslintConfig": {
     "extends": [

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import React from "react";
 import { createClient } from '@supabase/supabase-js';
 
-// NEW: Initialize the Supabase client using environment variables
+// Initialize Supabase client (use anon key, no custom JWT)
 const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
 const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -111,63 +111,28 @@ function useRedditPoems() {
   return poems;
 }
 
-// NEW: Updated generateMimicPoem to use REACT_APP_OPENAI_API_KEY and insert into Supabase
-async function generateMimicPoem(humanText) {
-  const prompt = `Mimic the following poem's length, theme (if the poem is about betrayal, make yours about betrayal, etc.), and quirks—including any errors or extra messages. Deviate from the plot to produce a completely unique poem that still bears a vague association with the original. Generate a similar poem:\n
-  
-${humanText}
-
-Your answer should blend in every nuance.`;
-  try {
-    const res = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.REACT_APP_OPENAI_API_KEY}`
-      },
-      body: JSON.stringify({
-        model: "gpt-4.1-mini",
-        messages: [{ role: "user", content: prompt }],
-        temperature: 0.7
-      })
-    });
-    const data = await res.json();
-    if (data.choices && data.choices.length > 0) {
-      const mimicText = data.choices[0].message.content.trim();
-      const { error } = await supabase
-        .from("ai_poems")
-        .insert([
-          {
-            text: mimicText,
-            created_at: new Date().toISOString()
-          }
-        ]);
-      if (error) {
-        console.error("Error inserting AI poem into Supabase:", error);
-        // print the error to the console
-        console.error("Error details:", error.details);
-      }
-      return mimicText;
-    } else {
-      return "No mimic output generated.";
-    }
-  } catch (err) {
-    console.error(err);
-    return `Error: ${err.message}`;
-  }
-}
-
+// Fetch a random AI poem from Supabase and pair it with a random human poem
 async function getShuffledPoemPair(humanPoems) {
   if (!Array.isArray(humanPoems) || humanPoems.length === 0) return [];
-  // Pick a random human poem that meets our length criteria (at least 6 non-empty lines)
+  // pick a human poem with at least 6 non-empty lines
   const candidates = humanPoems.filter(poem => poem.text.split('\n').filter(Boolean).length >= 6);
   const humanPick = candidates[Math.floor(Math.random() * candidates.length)];
-  // Generate the mimic poem via ChatGPT and cache it in Supabase from generateMimicPoem
-  const mimicText = await generateMimicPoem(humanPick.text);
-  // Randomize order: either [human, mimic] or vice versa
-  return Math.random() > 0.5
-    ? [humanPick, { title: "Mimic Poem", author: "AI (ChatGPT Mimic)", text: mimicText }]
-    : [{ title: "Mimic Poem", author: "AI (ChatGPT Mimic)", text: mimicText }, humanPick];
+  // fetch AI poems from Supabase
+  const { data: aiPoems = [], error } = await supabase
+    .from("ai_poems")
+    .select("id, text, mimiced_author, created_at");
+  if (error || aiPoems.length === 0) {
+    console.error("Error fetching AI poems:", error);
+    return [humanPick];
+  }
+  // pick a random AI poem
+  const aiPick = aiPoems[Math.floor(Math.random() * aiPoems.length)];
+  // assemble pair and shuffle order
+  const pair = [
+    { title: "AI Poem", author: aiPick.mimiced_author, text: aiPick.text },
+    humanPick
+  ];
+  return Math.random() > 0.5 ? pair.reverse() : pair;
 }
 
 function PoemGame() {
@@ -176,6 +141,10 @@ function PoemGame() {
   const [poemPair, setPoemPair] = useState([]);
   const [selected, setSelected] = useState(null);
   const [result, setResult] = useState(null);
+
+  // NEW: score state
+  const [correctCount, setCorrectCount] = useState(0);
+  const [wrongCount, setWrongCount] = useState(0);
 
   // Helper function to scroll to the top of the page
   function scrollToTop() {
@@ -209,10 +178,13 @@ function PoemGame() {
 
   function handleGuess(index) {
     setSelected(index);
-    if (poemPair[index].author !== "AI (ChatGPT Mimic)") {
+    const isCorrect = poemPair[index].author !== "AI (ChatGPT Mimic)";
+    if (isCorrect) {
       setResult("Correct! You found the human poem.");
+      setCorrectCount(c => c + 1);      // increment correct
     } else {
       setResult("Wrong! That was the AI (mimic) poem.");
+      setWrongCount(w => w + 1);        // increment wrong
     }
   }
 
@@ -230,6 +202,10 @@ function PoemGame() {
     <div className="projects-container" style={{ minHeight: "60vh", position: "relative" }}>
       <div className="project">
         <h2>Poem vs AI Generated Poem</h2>
+        {/* NEW: Score display */}
+        <div className="score-tracker" style={{ marginBottom: "1em", color: "#fff" }}>
+          Score: {correctCount} correct, {wrongCount} wrong
+        </div>
         <p>Can you guess which poem is written by a human?</p>
         <div className="poem-game">
           {poemPair.map((poem, idx) => (
@@ -273,10 +249,33 @@ function PoemGame() {
             <button
               onClick={nextRound}
               className="poemgame-next-btn"
-              style={{ marginTop: "0.5em", position: "relative", zIndex: 1001 }}
+              style={{
+                marginTop: "0.5em",
+                position: "relative",
+                zIndex: 1001
+              }}
             >
               Next Round
             </button>
+            {/* Author attribution */}
+            {poemPair.map((poem, idx) => (
+              <div key={idx} style={{ marginTop: "0.5em", color: "#fff" }}>
+                Poem {idx + 1} by{" "}
+                {poem.author.startsWith("AI")
+                  ? poem.author
+                  : (
+                    <a
+                      href={`https://www.reddit.com/user/${poem.author}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "#fff", textDecoration: "underline" }}
+                    >
+                      {poem.author}
+                    </a>
+                  )
+                }
+              </div>
+            ))}
           </div>
         )}
       </div>

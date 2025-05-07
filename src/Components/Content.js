@@ -1,4 +1,4 @@
-//@ts-check
+// @ts-nocheck
 
 import React from "react";
 import Nav from "./Nav.js";
