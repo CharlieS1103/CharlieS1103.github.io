@@ -125,13 +125,15 @@ async function getShuffledPoemPair(humanPoems) {
     console.error("Error fetching AI poems:", error);
     return [humanPick];
   }
-  // pick a random AI poem
+  // pick and tag a random AI poem
   const aiPick = aiPoems[Math.floor(Math.random() * aiPoems.length)];
-  // assemble pair and shuffle order
-  const pair = [
-    { title: "AI Poem", author: aiPick.mimiced_author, text: aiPick.text },
-    humanPick
-  ];
+  const aiObj = {
+    title: "Mimic Poem",
+    author: "AI (Mimic)",
+    text: aiPick.text,
+    mimiced_author: aiPick.mimiced_author
+  };
+  const pair = [aiObj, humanPick];
   return Math.random() > 0.5 ? pair.reverse() : pair;
 }
 
@@ -178,7 +180,7 @@ function PoemGame() {
 
   function handleGuess(index) {
     setSelected(index);
-    const isCorrect = poemPair[index].author !== "AI (ChatGPT Mimic)";
+    const isCorrect = poemPair[index].author !== "AI (Mimic)";
     if (isCorrect) {
       setResult("Correct! You found the human poem.");
       setCorrectCount(c => c + 1);      // increment correct
@@ -260,20 +262,19 @@ function PoemGame() {
             {/* Author attribution */}
             {poemPair.map((poem, idx) => (
               <div key={idx} style={{ marginTop: "0.5em", color: "#fff" }}>
-                Poem {idx + 1} by{" "}
-                {poem.author.startsWith("AI")
-                  ? poem.author
-                  : (
-                    <a
-                      href={`https://www.reddit.com/user/${poem.author}`}
+                Poem {idx + 1} by {poem.author}
+                {poem.author === "AI (Mimic)" && poem.mimiced_author && (
+                  <span>
+                    {" "}(<a
+                      href={`https://www.reddit.com/user/${poem.mimiced_author}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       style={{ color: "#fff", textDecoration: "underline" }}
                     >
-                      {poem.author}
-                    </a>
-                  )
-                }
+                      original by {poem.mimiced_author}
+                    </a>)
+                  </span>
+                )}
               </div>
             ))}
           </div>
