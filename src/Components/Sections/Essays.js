@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/Essays.scss';
-import supabase from '../../lib/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 
 function Essays() {
   const [essaysList, setEssaysList] = useState([]);
 
   const [showModal, setShowModal] = useState(false);
   const [selectedEssay, setSelectedEssay] = useState(null);
+
+  const supabaseUrl = process.env.REACT_APP_SUPABASE_URL;
+  const supabaseAnonKey = process.env.REACT_APP_SUPABASE_ANON_KEY;
+  const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
   useEffect(() => {
     async function loadEssays() {

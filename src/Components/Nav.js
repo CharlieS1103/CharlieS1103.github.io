@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import "../styles/Nav.scss";
-import { Link } from "react-router-dom";
-import SignupModal from './SignupModal';
+/*import { Link } from "react-router-dom";
+import SignupModal from './SignupModal';*/
 
 function Nav() {
-  const [isOpen, setIsOpen] = useState(false);
+  /*
+ 
   const [isSignupOpen, setSignupOpen] = useState(false);
 
+
+  const openSignup = () => setSignupOpen(true);
+  const closeSignup = () => setSignupOpen(false);
+*/
+ const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-  const openSignup = () => setSignupOpen(true);
-  const closeSignup = () => setSignupOpen(false);
-
   return (
     <div className="navigation">
       <button className="menu-toggle" onClick={toggleMenu}>
@@ -34,14 +37,16 @@ function Nav() {
         <li>
           <a href="#poem">poem</a>
         </li>
-        <li>
+       {/* <li>
           <a href="#essays">essays</a>
-        </li>
-        <li>
+        </li> */}
+
+       {/* <li>
           <button className="nav-btn" onClick={openSignup}>signup</button>
-        </li>
+        </li> */}
+
       </ul>
-     <SignupModal isOpen={isSignupOpen} onClose={closeSignup} />
+     {/* <SignupModal isOpen={isSignupOpen} onClose={closeSignup} /> */}
     </div>
   );
 }
