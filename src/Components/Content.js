@@ -34,10 +34,10 @@ function Content() {
         </section>
         <section id="poem">
           <PoemGame></PoemGame>
-        </section>
-                <section id="essays">
+       </section>
+        {/*<section id="essays">
           <Essays />
-        </section>
+        </section>(*/}
       </div>
     </>
   );
