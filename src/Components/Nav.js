@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import "../styles/Nav.scss";
 import { Link } from "react-router-dom";
+import SignupModal from './SignupModal';
 
 function Nav() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSignupOpen, setSignupOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  const openSignup = () => setSignupOpen(true);
+  const closeSignup = () => setSignupOpen(false);
 
   return (
     <div className="navigation">
@@ -15,7 +19,7 @@ function Nav() {
         ☰
       </button>
       <ul className={isOpen ? 'open' : ''}>
-      <li>
+        <li>
           <a href="#home">home</a>
         </li>
         <li>
@@ -30,7 +34,14 @@ function Nav() {
         <li>
           <a href="#poem">poem</a>
         </li>
+        <li>
+          <a href="#essays">essays</a>
+        </li>
+        <li>
+          <button className="nav-btn" onClick={openSignup}>signup</button>
+        </li>
       </ul>
+     <SignupModal isOpen={isSignupOpen} onClose={closeSignup} />
     </div>
   );
 }

@@ -204,7 +204,6 @@ function PoemGame() {
     <div className="projects-container" style={{ minHeight: "60vh", position: "relative" }}>
       <div className="project">
         <h2>Poem vs AI Generated Poem</h2>
-        {/* NEW: Score display */}
         <div className="score-tracker" style={{ marginBottom: "1em", color: "#fff" }}>
           Score: {correctCount} correct, {wrongCount} wrong
         </div>

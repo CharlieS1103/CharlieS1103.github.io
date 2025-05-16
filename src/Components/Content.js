@@ -2,7 +2,7 @@
 
 import React from "react";
 import Nav from "./Nav.js";
-import { Projects, About, Home, Contact, PoemGame } from "./Sections/index.js";
+import { Projects, About, Home, Contact, PoemGame, Essays } from "./Sections/index.js";
 function Content() {
   return (
     <>
@@ -26,13 +26,17 @@ function Content() {
           <About></About>
         </section>
         <section id="projects">
-          <Projects></Projects>
+          <Projects />
         </section>
+
         <section id="contact">
-         <Contact></Contact>
+          <Contact />
         </section>
         <section id="poem">
           <PoemGame></PoemGame>
+        </section>
+                <section id="essays">
+          <Essays />
         </section>
       </div>
     </>

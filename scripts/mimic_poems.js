@@ -69,6 +69,8 @@ async function getRedditPoems(limit = 100) {
   return list
 }
 
+
+
 async function mimicPoem(original) {
   const prompt = `
 Mimic the following poem's length, theme, and quirks/errors. Do not make it an exact replica, it should be a distinct work. 
