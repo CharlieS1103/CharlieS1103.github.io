@@ -17,14 +17,12 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "populate-db": "node scripts/generateMimicPoems.js",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "mimic:poems": "node scripts/mimic_poems.js",
     "mimic:news": "node scripts/fake_news.js"
   },
   "eslintConfig": {
