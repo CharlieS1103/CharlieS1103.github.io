@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.83c4efc9.css",
-    "main.js": "/static/js/main.0d7bf4ef.js",
+    "main.css": "/static/css/main.94afac58.css",
+    "main.js": "/static/js/main.ed0cfbe1.js",
     "static/js/787.7d7ded2f.chunk.js": "/static/js/787.7d7ded2f.chunk.js",
     "static/media/slurp-slop-dashboard.png": "/static/media/slurp-slop-dashboard.c1443c89f693b608e23b.png",
     "index.html": "/index.html",
-    "main.83c4efc9.css.map": "/static/css/main.83c4efc9.css.map",
-    "main.0d7bf4ef.js.map": "/static/js/main.0d7bf4ef.js.map",
+    "main.94afac58.css.map": "/static/css/main.94afac58.css.map",
+    "main.ed0cfbe1.js.map": "/static/js/main.ed0cfbe1.js.map",
     "787.7d7ded2f.chunk.js.map": "/static/js/787.7d7ded2f.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.83c4efc9.css",
-    "static/js/main.0d7bf4ef.js"
+    "static/css/main.94afac58.css",
+    "static/js/main.ed0cfbe1.js"
   ]
 }
