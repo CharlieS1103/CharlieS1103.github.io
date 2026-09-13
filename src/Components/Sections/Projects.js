@@ -30,6 +30,20 @@ const projects = [
     statement:
     ""
   },
+  {
+    name: "Aygilia Website",
+    description: "This is a website for the LLC we made to contain SlurpSlop, you should click on the link to read more about us.",
+    image: "/assets/aygilia-logo.svg",
+    link: "https://aygilia.com",
+    statement: "While SlurpSlop is a great alliterating name for our product, it's a little too unprofessional for our brand name, so we chose Aygilia. It's based around the story of the first analog computing device, the antikythera, which maps out the stars for a given observer for epochs into the future. Our logo is modeled after that device as well.",
+  },
+  {
+    name: "Slurp Slop",
+    description: "Chrome extension which removes AI content.",
+    image: "/assets/slurp-slop-dashboard.png",
+    link: "https://chromewebstore.google.com/detail/slurpslop/kddigfbmalmcbnhiolglepanoekcgjdk?hl=en",
+    statement: "While there's plenty of chrome extensions which remove the AI overview (which we do as well), most if not all rely on class selectors, which need to be updated whenever google obfuscates their code (at a minimum each version bump). Ours works using regex and pattern recognition however, meaning no downtime between google updates. Additionally, we have redesigned the base extension to be specialized for an educational setting, check out the Aygilia website for more information on that.",
+  },
 ];
 
 function Projects() {
