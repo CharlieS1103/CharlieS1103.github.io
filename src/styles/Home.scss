@@ -6,30 +6,13 @@
       flex-direction: column;
       align-items: center;
 
-      .desktop-only {
-        display: block;
-      }
-
-      .mobile-only {
-        display: none;
+      p {
+        max-width: 44rem;
+        padding: 1.5rem;
+        color: $main-color;
+        font-size: 1.25rem;
+        line-height: 1.6;
         text-align: center;
-        font-size: 1.2rem;
-        color: rgb(255, 255, 255);
-        margin-top: 20px;
-      }
-    }
-  }
-
-  @media (max-width: 768px) {
-    .home-content {
-      .home-content-text {
-        .desktop-only {
-          display: none;
-        }
-
-        .mobile-only {
-          display: block;
-        }
       }
     }
   }

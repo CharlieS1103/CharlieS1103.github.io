@@ -6,16 +6,7 @@ function Home() {
         <div className="home">
             <div className="home-content">
                 <div className="home-content-text">
-                    <div className="desktop-only">
-                        <img src="https://github-readme-stats.vercel.app/api/wakatime?username=charlies1103&theme=algolia" alt="Wakatime Stats" />
-                    </div>
-                    <div className="desktop-only">
-                        <img src="https://github-readme-stats.vercel.app/api?username=charlies1103&&show_icons=true&theme=algolia" alt="GitHub Stats" />
-                    </div>
-                    <div className="mobile-only">
-                        <p>This section of the website doesn't work on mobile, but trust me, I programmed a lot this week...</p>
-                        <p>Scroll down!</p>
-                    </div>
+                    <p>Hi! I'm Charlie. I'm 20 years old studying English and Comp sci at UVM. I have plenty of experience prorgamming, and almost no experience talking about it. \nThat said, somehow this website and it's maintenance are by far the most challenging things I've ever had the privledge of working on. </p>
                 </div>
             </div>
         </div>
